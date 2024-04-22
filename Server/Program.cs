@@ -8,12 +8,12 @@ using (HttpServer sv = new HttpServer())
     sv.Setting();
     sv.Init();
 
-    sv.Map("/", () =>
+    sv.Map("/", (HttpContext context, QueryParametrs queryParametrs) =>
     {
-        Console.WriteLine("sad");
-        return "asd";
+
+        return queryParametrs.ToString();
     });
-    sv.Map("/os", () =>
+    sv.Map("/os", (HttpContext context, QueryParametrs queryParametrs) =>
     {
 
         return string.Join(",", from os in Util.OS_SystemList select os.ToString());

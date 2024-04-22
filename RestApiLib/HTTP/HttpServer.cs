@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -10,7 +11,7 @@ namespace RestApiLib.HTTP
     {
         private HttpListener server = new HttpListener();
         private string ipport = "";
-        private Dictionary<string, Func<string>> PrefixesEvent = new Dictionary<string, Func<string>>();
+        private Dictionary<string, Func<HttpContext, QueryParametrs, string>> PrefixesEvent = new Dictionary<string, Func<HttpContext, QueryParametrs, string>>();
         private string f_json_setting = "setting.json";
         private HttpServerSetting httpServerSetting = new HttpServerSetting();
         public HttpServer()
@@ -54,7 +55,7 @@ namespace RestApiLib.HTTP
 
 
 
-        public void Map(string pattern, Func<string> RequestDelegate)
+        public void Map(string pattern, Func<HttpContext, QueryParametrs, string> RequestDelegate)
         {
 
             string perf_ = $"{ipport}{pattern}";
@@ -66,11 +67,8 @@ namespace RestApiLib.HTTP
 
         public void Run()
         {
-
             server.Start();
             Console.WriteLine($"Сервер запущен по: {ipport}");
-
-
             while (true)
             {
                 try
@@ -80,23 +78,27 @@ namespace RestApiLib.HTTP
                     HttpListenerRequest request = context.Request;
                     HttpListenerResponse response = context.Response;
                     string localpath_ = request.GetLocalPath();
-
-
-
-                    Console.WriteLine($"Aдрес приложения: {request}");
+                    Console.WriteLine($"Aдрес приложения: {request.RemoteEndPoint}");
                     Console.WriteLine($"{localpath_}");
-
                     if (PrefixesEvent.ContainsKey(localpath_))
                     {
 
-                        response.WriteAsyncString(PrefixesEvent[localpath_]());
+
+
+
+                        HttpContext httpContext = new HttpContext
+                        {
+                            IPEndPointClient = request.RemoteEndPoint,
+
+                            httpListenerRequestl = request,
+                        };
+
+
+
+                        response.WriteAsyncString(PrefixesEvent[localpath_](httpContext, new QueryParametrs(request.Url.Query)));
                         continue;
 
                     }
-
-
-
-
                     response.WriteAsyncString("Error 202");
                 }
                 catch (Exception e)
