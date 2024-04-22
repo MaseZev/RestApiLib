@@ -40,5 +40,13 @@ namespace RestApiLib
             output.WriteAsync(buffer);
             output.FlushAsync();
         }
+        public static void WriteAsyncByte(this HttpListenerResponse response, byte[] buffer)
+        {
+
+
+            using Stream output = response.OutputStream;
+            output.WriteAsync(buffer);
+            output.FlushAsync();
+        }
     }
 }

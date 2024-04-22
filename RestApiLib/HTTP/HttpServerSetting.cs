@@ -18,6 +18,13 @@ namespace RestApiLib.HTTP
             { "WINDOWS" , ("http://127.0.0.1" , _deffoult_port ) },
             { "LINUX" ,  ("http://62.109.19.41" , _deffoult_port) },
         };
+
+        public List<string> Paths = new List<string>()
+        {
+
+        };
+
+
         public string GetData()
         {
             (string, int) obj;

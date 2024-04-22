@@ -17,7 +17,7 @@ namespace RestApiLib.HTTP
     {
         public IPEndPoint IPEndPointClient;
         public HttpListenerRequest httpListenerRequestl;
-
+        public string LocalPath = string.Empty;
         public override string ToString()
         {
             return $"{IPEndPointClient.Address.ToString()}";
