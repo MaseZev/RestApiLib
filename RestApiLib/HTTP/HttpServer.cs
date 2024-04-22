@@ -99,7 +99,7 @@ namespace RestApiLib.HTTP
                         continue;
 
                     }
-                    response.WriteAsyncString("Error 202");
+                    response.WriteAsyncString("Error");
                 }
                 catch (Exception e)
                 {
